@@ -5,15 +5,17 @@ namespace ZombieParty.Controllers
 {
     public class ZombieTypeController : Controller
     {
+
+        private static List<ZombieType> _maListe = new List<ZombieType>()
+        {
+            new ZombieType(){ TypeName = "Virus", Id = 1 },
+            new ZombieType(){ TypeName = "Contact", Id = 2 }
+        };
+
         public IActionResult Index()
         {
-            this.ViewBag.MaListe = new List<ZombieType>()
-            {
-                new ZombieType(){TypeName= "Virus", Id=1},
-                new ZombieType(){TypeName= "Contact", Id=2}
-            };  
 
-
+            this.ViewBag.MaListe = _maListe;
             return View();
         }
 
@@ -30,6 +32,9 @@ namespace ZombieParty.Controllers
             if (ModelState.IsValid)
             {
                 // Ajouter à la BD
+                zombieType.Id = _maListe.Max(x => x.Id) + 1;
+                _maListe.Add(zombieType);
+                return RedirectToAction("Index");
             }
 
             return this.View(zombieType);
